@@ -1,0 +1,496 @@
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>序号与灯 · 教学展示</title>
+<style>
+* {
+box-sizing: border-box;
+}
+body {
+margin: 0;
+min-height: 100vh;
+background: radial-gradient(circle at 30% 20%, #1e3a4b, #0d1c26);
+font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+display: flex;
+justify-content: center;
+align-items: center;
+padding: 16px;
+}
+.card {
+max-width: 1000px;
+width: 100%;
+background: rgba(18, 30, 41, 0.9);
+backdrop-filter: blur(10px);
+border-radius: 3rem;
+padding: 2.2rem 2rem 3rem;
+box-shadow: 0 30px 45px -12px rgba(0, 0, 0, 0.9), inset 0 1px 4px rgba(255, 255, 255, 0.06);
+border: 1px solid rgba(90, 170, 240, 0.25);
+}
+h1 {
+text-align: center;
+color: #c6e2ff;
+font-weight: 400;
+letter-spacing: 2px;
+font-size: 2.1rem;
+text-shadow: 0 4px 12px #0a1a2b, 0 0 20px #3b85c0;
+margin-top: 0.1rem;
+margin-bottom: 1.8rem;
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 12px;
+flex-wrap: wrap;
+}
+h1 span {
+background: #1d3346;
+border-radius: 60px;
+padding: 0.25rem 1.2rem;
+font-size: 1.2rem;
+font-weight: 500;
+color: #b0d4ff;
+border: 1px solid #3d6e94;
+box-shadow: inset 0 2px 8px #0f1e2d;
+}
+/* 输入区域 */
+.input-panel {
+background: #122433;
+border-radius: 80px;
+padding: 0.65rem 0.65rem 0.65rem 2rem;
+display: flex;
+flex-wrap: wrap;
+align-items: center;
+justify-content: space-between;
+gap: 1rem;
+margin-bottom: 2.8rem;
+border: 1px solid #2c577a;
+box-shadow: inset 0 3px 10px #0a1825, 0 10px 18px -8px black;
+}
+.input-wrapper {
+display: flex;
+align-items: center;
+gap: 10px;
+flex: 2 1 240px;
+}
+.input-wrapper label {
+color: #9ac2e0;
+font-size: 1.15rem;
+font-weight: 500;
+white-space: nowrap;
+text-shadow: 0 1px 4px black;
+}
+.input-wrapper input {
+background: #0b1823;
+border: 1px solid #2e577b;
+border-radius: 60px;
+padding: 0.8rem 1.2rem;
+font-size: 1.4rem;
+font-weight: 600;
+width: 130px;
+color: #b6e2ff;
+outline: none;
+transition: 0.15s;
+box-shadow: inset 0 2px 10px #02080e;
+letter-spacing: 1px;
+text-align: center;
+}
+.input-wrapper input:focus {
+border-color: #5ba6f0;
+box-shadow: 0 0 0 4px rgba(80, 170, 255, 0.3), inset 0 2px 10px #02080e;
+background: #0e1e2d;
+}
+.input-wrapper input::placeholder {
+color: #537a9b;
+font-weight: 400;
+font-size: 0.95rem;
+letter-spacing: 0;
+}
+.confirm-btn {
+background: #1f6eb0;
+border: none;
+border-radius: 60px;
+padding: 0.9rem 2.4rem;
+font-size: 1.2rem;
+font-weight: 600;
+color: #ecf5ff;
+letter-spacing: 1px;
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 10px;
+cursor: pointer;
+box-shadow: 0 12px 20px -8px #0a1e30, 0 0 0 1px #4388c7 inset;
+transition: all 0.12s ease;
+white-space: nowrap;
+}
+.confirm-btn:hover {
+background: #2b7bc9;
+box-shadow: 0 12px 22px -6px #0f324e, 0 0 0 1px #6aa9e0 inset;
+transform: scale(1.02);
+}
+.confirm-btn:active {
+transform: scale(0.97);
+background: #1a4f81;
+box-shadow: 0 5px 12px -2px black;
+}
+/* 错误提示 */
+.error-msg {
+color: #ffa07a;
+font-size: 0.95rem;
+font-weight: 500;
+min-width: 150px;
+text-align: right;
+transition: 0.2s;
+text-shadow: 0 1px 4px black;
+}
+/* 8个灯的容器 */
+.lamps-container {
+display: flex;
+justify-content: center;
+align-items: center;
+gap: 1.2rem;
+margin: 1rem 0 1.8rem;
+flex-wrap: wrap;
+}
+/* 单个灯单元 */
+.lamp-unit {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 1rem;
+transition: transform 0.2s;
+}
+/* 序号标签 (1-8) */
+.index-label {
+font-size: 1.5rem;
+font-weight: 700;
+color: #7fa9c9;
+background: #0d1f2c;
+width: 48px;
+height: 48px;
+display: flex;
+align-items: center;
+justify-content: center;
+border-radius: 50%;
+border: 1px solid #2f597b;
+box-shadow: inset 0 2px 8px #020a10, 0 4px 8px black;
+transition: all 0.2s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+text-shadow: 0 2px 6px black;
+}
+/* 点亮时序号高亮 */
+.lamp-unit.active .index-label {
+color: #fff5d0;
+background: #b8860b;
+border-color: #ffd966;
+box-shadow: 0 0 16px #ffb347, 0 0 30px #ff8c00, inset 0 2px 8px #ffdd88;
+transform: scale(1.08);
+}
+/* 灯泡 */
+.lamp {
+width: 76px;
+height: 76px;
+border-radius: 50%;
+background: #1e2b37;
+box-shadow:
+0 0 0 3px #1a3143,
+inset 0 10px 15px rgba(0, 0, 0, 0.9),
+0 12px 25px rgba(0, 0, 0, 0.8);
+transition: all 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+position: relative;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+/* 灯泡亮起 */
+.lamp.on {
+background: radial-gradient(circle at 35% 35%, #fff9cf, #ffd966 55%, #e6a017);
+box-shadow:
+0 0 0 4px #f5e56b,
+0 0 30px 8px #ffd966,
+0 0 60px 18px #ffb347,
+inset 0 -6px 10px rgba(0, 0, 0, 0.3),
+inset 0 10px 15px rgba(255, 255, 220, 0.9);
+transform: scale(1.03);
+}
+/* 灯泡底座装饰 */
+.lamp::after {
+content: "";
+position: absolute;
+bottom: -12px;
+width: 34px;
+height: 10px;
+background: #3a4f61;
+border-radius: 12px;
+box-shadow: 0 4px 6px black;
+transition: 0.25s;
+}
+.lamp.on::after {
+background: #b39240;
+box-shadow: 0 0 18px #ffd966;
+}
+/* 灯下方的权重/序号提示 (辅助) */
+.lamp-unit .tiny-hint {
+font-size: 0.8rem;
+color: #557a96;
+letter-spacing: 0.5px;
+font-weight: 400;
+text-transform: uppercase;
+}
+.lamp-unit.active .tiny-hint {
+color: #ffd966;
+text-shadow: 0 0 6px #b8860b;
+}
+/* 底部说明 */
+.footnote {
+display: flex;
+justify-content: center;
+gap: 2.5rem;
+flex-wrap: wrap;
+color: #7c9eb8;
+margin-top: 2rem;
+font-size: 0.95rem;
+border-top: 1px solid #1e3b4e;
+padding-top: 2rem;
+text-align: center;
+}
+.footnote i {
+font-style: normal;
+background: #142c3d;
+padding: 0.35rem 1.4rem;
+border-radius: 40px;
+border: 1px solid #2e5570;
+box-shadow: inset 0 1px 6px #0b1a26;
+}
+/* 动画：新点亮的灯闪烁一下 */
+@keyframes popGlow {
+0% { transform: scale(1); filter: brightness(1); }
+50% { transform: scale(1.08); filter: brightness(1.4); }
+100% { transform: scale(1.03); filter: brightness(1); }
+}
+.lamp.on.pop {
+animation: popGlow 0.45s ease-out;
+}
+/* 熄灭的灯轻微过渡 */
+.lamp {
+transition: all 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+/* 小屏适配 */
+@media (max-width: 700px) {
+.card {
+padding: 1.5rem 1rem 2rem;
+border-radius: 2rem;
+}
+h1 {
+font-size: 1.6rem;
+}
+.input-panel {
+padding: 0.8rem 0.8rem 0.8rem 1.2rem;
+border-radius: 50px;
+}
+.input-wrapper input {
+width: 100px;
+font-size: 1.2rem;
+padding: 0.6rem 1rem;
+}
+.confirm-btn {
+padding: 0.7rem 1.5rem;
+font-size: 1rem;
+}
+.lamps-container {
+gap: 0.6rem;
+}
+.lamp {
+width: 58px;
+height: 58px;
+}
+.index-label {
+width: 40px;
+height: 40px;
+font-size: 1.2rem;
+}
+.lamp::after {
+width: 26px;
+height: 8px;
+bottom: -9px;
+}
+}
+@media (max-width: 480px) {
+.lamps-container {
+gap: 0.4rem;
+}
+.lamp {
+width: 48px;
+height: 48px;
+}
+.index-label {
+width: 34px;
+height: 34px;
+font-size: 1rem;
+}
+.lamp::after {
+width: 22px;
+height: 7px;
+bottom: -8px;
+}
+.input-wrapper label {
+font-size: 0.95rem;
+}
+}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>
+💡 序号·小灯
+<span>1 ~ 8</span>
+</h1>
+<!-- 输入与确认 -->
+<div class="input-panel">
+<div class="input-wrapper">
+<label for="numberInput">点亮第几号灯：</label>
+<input type="number" id="numberInput" min="1" max="8" value="3" placeholder="1-8" step="1">
+</div>
+<button class="confirm-btn" id="confirmBtn">
+<span>⚡</span> 确认点亮
+</button>
+<div class="error-msg" id="errorMsg"></div>
+</div>
+<!-- 8个小灯容器 (从左到右序号1~8) -->
+<div class="lamps-container" id="lampsContainer">
+<!-- 由JS动态生成，以保证结构与序号对应 -->
+</div>
+<div class="footnote">
+<i>🔢 序号 1 → 8 对应从左到右</i>
+<i>💡 只有指定序号的小灯会亮起</i>
+</div>
+</div>
+<script>
+(function() {
+// ---------- 配置 ----------
+const TOTAL_LAMPS = 8;                // 1~8号灯
+const lampsContainer = document.getElementById('lampsContainer');
+const numberInput = document.getElementById('numberInput');
+const confirmBtn = document.getElementById('confirmBtn');
+const errorMsg = document.getElementById('errorMsg');
+// 存储所有灯单元DOM (顺序: 索引0对应序号1, 索引7对应序号8)
+let lampUnits = [];          // 每个元素是 { unit, lamp, indexLabel } 方便操作
+let lampElements = [];       // 仅灯泡元素，用于添加/移除 'on'
+// ---------- 创建8个小灯 (序号1~8) ----------
+function createLamps() {
+lampsContainer.innerHTML = '';
+lampUnits = [];
+lampElements = [];
+for (let i = 1; i <= TOTAL_LAMPS; i++) {
+// 外层容器
+const unit = document.createElement('div');
+unit.className = 'lamp-unit';
+unit.dataset.index = i;          // 序号 1~8
+// 序号标签
+const indexLabel = document.createElement('div');
+indexLabel.className = 'index-label';
+indexLabel.textContent = i;
+// 灯泡
+const lamp = document.createElement('div');
+lamp.className = 'lamp';          // 默认熄灭
+lamp.dataset.index = i;
+// 可选的小提示 (显示“#i”)
+const hint = document.createElement('div');
+hint.className = 'tiny-hint';
+hint.textContent = `#${i}`;
+// 组装
+unit.appendChild(indexLabel);
+unit.appendChild(lamp);
+unit.appendChild(hint);
+lampsContainer.appendChild(unit);
+// 存储引用
+lampUnits.push({ unit, lamp, indexLabel });
+lampElements.push(lamp);
+}
+}
+// ---------- 点亮指定序号的小灯 (1~8) ----------
+function activateLamp(targetIndex) {
+// 移除所有灯的 'on' 和 'pop' 以及父级的 'active'
+for (let i = 0; i < lampElements.length; i++) {
+const lamp = lampElements[i];
+const unit = lampUnits[i].unit;
+lamp.classList.remove('on', 'pop');
+unit.classList.remove('active');
+}
+// 如果targetIndex在有效范围内 (1~8)
+if (targetIndex >= 1 && targetIndex <= TOTAL_LAMPS) {
+const idx = targetIndex - 1; // 数组索引
+const targetLamp = lampElements[idx];
+const targetUnit = lampUnits[idx].unit;
+// 点亮灯泡 + 序号高亮
+targetLamp.classList.add('on');
+targetUnit.classList.add('active');
+// 添加闪烁动画 (先移除再添加以重置动画)
+void targetLamp.offsetWidth; // 强制重绘
+targetLamp.classList.add('pop');
+// 动画结束后移除pop类，避免干扰后续
+setTimeout(() => {
+targetLamp.classList.remove('pop');
+}, 500);
+}
+}
+// ---------- 错误提示 ----------
+function showError(message) {
+errorMsg.textContent = message;
+if (window.errorTimeout) clearTimeout(window.errorTimeout);
+window.errorTimeout = setTimeout(() => {
+errorMsg.textContent = '';
+}, 2800);
+}
+function clearError() {
+errorMsg.textContent = '';
+if (window.errorTimeout) {
+clearTimeout(window.errorTimeout);
+window.errorTimeout = null;
+}
+}
+// ---------- 处理确认点击 ----------
+function handleConfirm() {
+clearError();
+const rawValue = numberInput.value.trim();
+if (rawValue === '') {
+showError('请输入数字');
+// 保留当前亮灯状态，不改变
+return;
+}
+const number = Number(rawValue);
+// 检查整数且在1~8之间
+if (!Number.isInteger(number) || number < 1 || number > 8) {
+showError('请输入 1~8 的整数');
+return;
+}
+// 有效输入: 点亮对应序号灯
+activateLamp(number);
+// 同步输入框格式（去除前导零等）
+numberInput.value = number;
+}
+// ---------- 初始化 ----------
+function init() {
+createLamps();
+// 默认点亮第3号灯，输入框初始值也设为3
+const defaultIndex = 3;
+numberInput.value = defaultIndex;
+activateLamp(defaultIndex);
+}
+// ---------- 事件绑定 ----------
+confirmBtn.addEventListener('click', handleConfirm);
+numberInput.addEventListener('keypress', (e) => {
+if (e.key === 'Enter') {
+e.preventDefault();
+handleConfirm();
+}
+});
+// 输入时清除错误提示
+numberInput.addEventListener('input', () => {
+clearError();
+});
+// 启动
+init();
+})();
+</script>
+</body>
+</html>
